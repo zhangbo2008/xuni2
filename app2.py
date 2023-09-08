@@ -54,14 +54,15 @@ except Exception:
     # Windows
     logger.warning("Windows, cant run time.tzset()")
 
-# model_name = "THUDM/chatglm2-6b"  # 7x?G
+model_name = "THUDM/chatglm2-6b"  # 7x?G
+model_name = "THUDM/chatglm2-6b-int4"  # 7x?G
 model_name = "THUDM/chatglm-6b-int8"  # 3.9G
 
 RETRY_FLAG = False
 
 tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
 has_cuda = torch.cuda.is_available()
-model = AutoModel.from_pretrained("THUDM/chatglm-6b-int8", trust_remote_code=True).half().cuda()
+model = AutoModel.from_pretrained(model_name, trust_remote_code=True).half().cuda()
 model = model.eval()
 print('语言model loaded')#============服务启动时间都花这上了.
 def postprocess(self, y):
@@ -818,4 +819,4 @@ with gr.Blocks(title="ChatGLM2-6B-int8", theme=gr.themes.Soft(text_size="sm")) a
     )
     deleteBtn.click(delete_last_turn, [chatbot, history], [chatbot, history])
 
-demo.queue(concurrency_count=3, max_size=30).launch(debug=True,show_api=True,inbrowser=True,)
+demo.queue(concurrency_count=3, max_size=30).launch(server_name='0.0.0.0',debug=True,show_api=True,inbrowser=True,share=True)
