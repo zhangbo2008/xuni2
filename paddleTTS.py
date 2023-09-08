@@ -20,21 +20,12 @@ tts_executor = TTSExecutor()
 print(paddle.get_device())
 fdsaf=paddle.get_device()
 wav_file = tts_executor(
-    text='今天的天气不错啊',
+    text='你好，我叫 QAGLM，是一个由清华大学 KEG 实验室和智谱AI训练的大型语言模型。',
     output='output.wav',
-    am='fastspeech2_csmsc',
-    am_config=None,
-    am_ckpt=None,
-    am_stat=None,
+    am='fastspeech2_mix',
     spk_id=0,
-    phones_dict=None,
-    tones_dict=None,
-    speaker_dict=None,
-    voc='pwgan_csmsc',
-    voc_config=None,
-    voc_ckpt=None,
-    voc_stat=None,
-    lang='zh',
+    voc='hifigan_csmsc',
+    lang='mix',
     device=paddle.get_device())
 print(wav_file)
 print(time.time()-adsf)

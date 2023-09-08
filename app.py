@@ -72,6 +72,21 @@ def parse_text(text):
     return text
 
 
+#===========添加submitBtn的相应为视频对应
+def videochufa():
+    print('运行videochufa')
+    videostate.play() # ========这种对象,不能传参,只能用全局变量.
+    videostate.autoplay=True
+    videostate.value='test6.mp4'
+    print(videostate.autoplay)
+    from main9 import main
+    # main('ffffff')
+    videostate.update(value='result99999999.mp4')
+    return videostate.update(value='result99999999.mp4') ########===========需要更新组件,要在返回函数里面写update,然后把值写上去.
+
+
+
+
 def predict(
     RETRY_FLAG, input, chatbot, max_length, top_p, temperature, history, past_key_values
 ):
@@ -97,9 +112,26 @@ def predict(
         top_p=top_p,
         temperature=temperature,
     ):
+        # print('得到的response',response[-1])
         chatbot[-1] = (parse_text(input), parse_text(response))
         past_key_values=None
         yield chatbot, history, past_key_values
+    print('回答完所有之后函数的结果是',response)#=========在生成yield的循环之后获取即可.
+    #==============这个函数后面加上数字人.
+
+
+    #
+    if 0:
+        from main9 import main
+        main(response)
+        videostate.autoplay=True
+    videochufa()
+
+
+
+
+
+
 
 def reset_user_input():
     return gr.update(value="")
@@ -143,11 +175,20 @@ def retry_last_answer(
     )
 
 
-with gr.Blocks(title="ChatGLM2-6B-int4", theme=gr.themes.Soft(text_size="sm")) as demo:
+
+
+
+
+
+
+
+
+with gr.Blocks(title="ChatGLM2-6B-int8", theme=gr.themes.Soft(text_size="sm")) as demo:
     with gr.Column(scale=4):
         with gr.Row():
             chatbot = gr.Chatbot()
-            chatbot2 = gr.Chatbot()
+            videostate =gr.Video(value='result99999999.mp4',width=400,height=400, autoplay=True)
+            print(videostate,33333333333333)
     with gr.Row():
         with gr.Column(scale=4):
             with gr.Column(scale=12):
@@ -181,7 +222,7 @@ with gr.Blocks(title="ChatGLM2-6B-int4", theme=gr.themes.Soft(text_size="sm")) a
     history = gr.State([])
     past_key_values = gr.State(None)
 
-    user_input.submit(
+    user_input.submit(      # =======按回车相应
         predict,
         [
             RETRY_FLAG,
@@ -196,7 +237,7 @@ with gr.Blocks(title="ChatGLM2-6B-int4", theme=gr.themes.Soft(text_size="sm")) a
         [chatbot, history, past_key_values],
         show_progress="full",
     )
-    submitBtn.click(
+    submitBtn.click(     #=========按submit按钮相应.
         predict,
         [
             RETRY_FLAG,
@@ -213,6 +254,23 @@ with gr.Blocks(title="ChatGLM2-6B-int4", theme=gr.themes.Soft(text_size="sm")) a
         api_name="predict",
     )
     submitBtn.click(reset_user_input, [], [user_input])
+
+
+    
+
+    # submitBtn.click(videochufa,[],[videostate]) ######不触发.
+
+
+
+
+
+
+
+
+
+
+
+
 
     emptyBtn.click(
         reset_state, outputs=[chatbot, history, past_key_values], show_progress="full"
